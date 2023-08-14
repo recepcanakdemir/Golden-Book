@@ -1,0 +1,45 @@
+body{
+    font-family: sans-serif;
+    overflow-x: hidden;
+}
+#container{
+    height: 80vh;
+}
+
+/* BOOKS */
+
+#book{
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  flex: 0 0 auto;
+  width: 200px;
+  height: 270px;
+  margin-right: 40px;
+  background-color: rgb(21, 216, 69);
+}
+
+#book:hover{
+    cursor: pointer;
+    background-color: rgb(174, 85, 85);
+}
+
+#books-line{
+  display: flex;
+  /* add horizontal scrolling and make it smooth */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+/* d-none the scroll bar*/
+#books-line::-webkit-scrollbar {
+  display: none;
+}
+
+#line-container{
+    height: 60%;
+}
+
+#form-background{
+    background-color:#f4f4f4;
+}
