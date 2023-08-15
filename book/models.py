@@ -10,6 +10,22 @@ class Book(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE, null=False,related_name="user")
     name = models.CharField(max_length=200, null=True)
     language = models.CharField(max_length=200, null=True)
+    words_per_page = models.IntegerField(blank=True, null=True)
+    cover_color = models.CharField(max_length=200,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def serialize(self):
+        return {
+            "id":self.pk,
+            "user":self.user,
+            "name":self.name,
+            "created":self.created_at.strftime("%b %d %Y, %I:%M %p"),
+            "updated":self.updated_at.strftime("%b %d %Y, %I:%M %p"),
+            "words_per_page":self.words_per_page,
+            "cover_color":self.cover_color,
+            
+        }
 
     def __str__(self):
         return self.name

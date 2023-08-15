@@ -1,6 +1,8 @@
 body{
     font-family: sans-serif;
     overflow-x: hidden;
+    height: 100vh;
+    width: 100vw;
 }
 #container{
     height: 80vh;
@@ -16,12 +18,10 @@ body{
   width: 200px;
   height: 270px;
   margin-right: 40px;
-  background-color: rgb(21, 216, 69);
 }
 
 #book:hover{
     cursor: pointer;
-    background-color: rgb(174, 85, 85);
 }
 
 #books-line{
@@ -43,3 +43,29 @@ body{
 #form-background{
     background-color:#f4f4f4;
 }
+
+#body-container{
+  height: 100%;
+  width: 100%;
+}
+
+/*Not logged in*/
+#image-container{
+  overflow: hidden;
+  background-image:url("./images/1260521.jpg");
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.4;
+} 
+#login-form{
+  background-color:#ffffff;
+  padding: 20px;
+}
+
+
+
