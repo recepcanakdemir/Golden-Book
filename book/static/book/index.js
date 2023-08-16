@@ -9,11 +9,11 @@ function bookSlider(){
         console.log("l",containerDimensions)
 
         nxtBtn.addEventListener('click', () => {
-            item.scrollLeft -= containerWidth;
+            item.scrollLeft -= containerWidth/2;
         })
 
         preBtn.addEventListener('click', () => {
-            item.scrollLeft += containerWidth;
+            item.scrollLeft += containerWidth/2;
         })
     })
 }
@@ -31,6 +31,7 @@ function closeNewBookView(e){
         overlay.classList.add('d-none')
     }
 }
+
 function closeNewBookView2(){
     const createOverlay = document.querySelector('#create-book-overlay')
     const overlay = document.querySelector('#overlay')
@@ -55,30 +56,30 @@ function getCookie(name) {
 }
 
 function createNewBook(){
-    const bookName = document.querySelector('#book-name').value;
-    const targetLanguage = document.querySelector('#target-language').value
-    const wordForPage = document.querySelector('#words-per-page').value
-    const color = document.querySelector('#cover-color').value
-    const bookLine = document.querySelector('#books-line')
-    const div = document.createElement('div');
-    div.innerHTML = `
-    <div id="book" class="m-1 rounded text-light" style="background-color:${color}">
-        <h1 class="p-4">${bookName}</h1>
-    </div>`
-    bookLine.appendChild(div)
-    closeNewBookView2()
+    //const bookName = document.querySelector('#book-name').value;
+    //console.log(bookName)
+    //const targetLanguage = document.querySelector('#target-language').value
+    //const wordForPage = document.querySelector('#words-per-page').value
+    //const e = document.querySelector('#color-cover');
+    //const color = e.options[e.selectedIndex].value;
+    //const colorSelect = document.querySelector('#color-cover').innerHTML;
+    //let textColor = '#FFFFFF';
+    //if( colorSelect === 'White' || colorSelect === 'Yellow' || colorSelect === 'Pink' ){
+        //textColor = '#000000';
+    //}
+    //const bookLine = document.querySelector('#books-line')
+    //const div = document.createElement('div');
+    //div.innerHTML = `
+    //<div id="book" class="m-1 rounded text-light" style="background-color:${color};">
+        //<h1 class="p-4">${bookName}</h1>
+    //</div>`
+    //bookLine.appendChild(div)
+    //closeNewBookView2()
 }
-
-function hoverBook(book){
-    book.addEventListener('onmouseover', e => {
-        e.target.style.backgroundColor = '#f4f4f4'
-    })
-}
-
 
 function filterBooks(e){
     const text = e.target.value.toLowerCase();
-    document.querySelectorAll(`#book`).forEach((item) => {
+    document.querySelectorAll(`.book`).forEach((item) => {
     const name = item.childNodes[1].textContent;
 
     if(name.toLowerCase().indexOf(text) !== -1){
@@ -88,19 +89,46 @@ function filterBooks(e){
     }
     })
 }
-    
+
+async function getBookContent(e){
+    const bookElement = e.target.closest('.book')
+    console.log(bookElement)
+}
+
+function resizeFontSize(books){
+    books.forEach(item => {
+        const bookWidth = item.clientWidth
+        const bookHeight = item.clientHeight
+        const dynamicText = item.childNodes[1].textContent;
+        const words = dynamicText.split(' ')
+        
+        //Get the longest word of a title
+        let max = words[0].length;
+        for(let i=0; i<words.length; i++){
+            if(words[i].length > max){
+                max = words[i].length
+            }
+            console.log(max,bookHeight,bookWidth)
+        }
+
+        const widthRatio = (max/bookWidth)*100
+        const heightRatio = (dynamicText.length/bookWidth)*100
+        let ratio = (heightRatio + widthRatio)/2
+        item.childNodes[1].style.fontSize = `${(1/ratio)*100}px`
+
+    })
+}
 function init(){
     const createBtn = document.querySelector('#create-btn');
     const body = document.querySelector('body'); 
     const saveCreateBtn = document.querySelector('#save-create');
-    const books = document.querySelectorAll('#book');
-    const filter = document.querySelector('#filter-books')
+    const filter = document.querySelector('#filter-books');
+    const books = document.querySelectorAll('.book');
 
     books.forEach(item => {
-        item.addEventListener('onmouseover', e => {
-            console.log(e.target)
-        })
-    });
+        //item.addEventListener('mouseover', getBookContent)
+    })
+
     if(filter){
         filter.addEventListener('keyup',filterBooks)
     }
@@ -110,11 +138,13 @@ function init(){
     else{
         return
     }
+    
+    resizeFontSize(books)
+    // Call the function initially and whenever the window is resized
+
     body.addEventListener('click',closeNewBookView)
     saveCreateBtn.addEventListener('click',createNewBook)
     bookSlider();
-
-
 }
 
 document.addEventListener('DOMContentLoaded',init)

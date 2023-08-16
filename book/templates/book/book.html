@@ -1,0 +1,18 @@
+{% extends "book/layout.html" %}
+
+{% block body %}
+<div id="page-container" class="rounded">
+    <div id="inner-container" class="w-50 h-100 m-auto border border-dark d-flex row rounded mt-5">
+        <div id="title" class="rounded-top" style="background-color:{{book.cover_color}}">
+            <h1 id ="page-title" class="text-center fs-2 fw-bold mt-3">{{book.name |truncatechars:30}}</h1>
+        </div>
+    <div id="all-pages" class="rounded-bottom" >
+            {% for page in pages %}
+            <div id="page" class="m-3 p-3">
+                <h1 class="text-center">{{page.number}}</h1>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

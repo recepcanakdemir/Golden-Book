@@ -8,26 +8,31 @@ body{
     height: 80vh;
 }
 
+#body-container{
+  height: 100%;
+  width: 100%;
+}
+
 /* BOOKS */
 
-#book{
+.book{
   position: relative;
-  overflow: hidden;
   padding: 20px;
   flex: 0 0 auto;
   width: 200px;
   height: 270px;
   margin-right: 40px;
+  overflow: hidden;
 }
-
-#book:hover{
+.book:hover{
     cursor: pointer;
+    background-color: #f4f4f4;
 }
 
 #books-line{
   display: flex;
   /* add horizontal scrolling and make it smooth */
-  overflow-x: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
@@ -44,9 +49,8 @@ body{
     background-color:#f4f4f4;
 }
 
-#body-container{
-  height: 100%;
-  width: 100%;
+#book-view-container{
+  height: 160%;
 }
 
 /*Not logged in*/
@@ -68,4 +72,38 @@ body{
 }
 
 
+/* Book Pages */
+
+#page-container{
+  width: 100vw;
+  height: 100vh;
+}
+
+
+#title{
+  height: 10%;
+  border-bottom: 1px dotted #333;
+  color: white;
+}
+#all-pages{
+  height: 90%;
+  display: grid;
+  grid-template-columns:repeat(5,20%);
+  overflow: auto;
+}
+#page{
+  height: 150px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  border: 3px solid #333;
+}
+
+#op-1{background:#1D149E;color:white;}
+#op-2{background:#FFEF00;color:black;}
+#op-3{background: #EB3324;color: white;}
+#op-4{background:#0C9E1C;color: black;}
+#op-5{background:white;color: black;}
+#op-6{background:black;color: white;}
+#op-7{background:#A303A0;color: white;}
+#op-8{background:#FC59D3;color: white;}
 

@@ -27,17 +27,34 @@ def create_book(request):
     if request.method == 'POST':
         user = request.user
         name = request.POST["name"]
+        link_name = '-'.join(str(name).split(' '))
         language = request.POST["language"]
         words_per_page = request.POST["words"]
-        cover_color = request.POST["color"]
-        book = Book.objects.create(user = user, name = name, language = language, words_per_page = words_per_page, cover_color = cover_color)
+        cover_color = str(request.POST["color"])
+        if cover_color == '#FFEF00' or cover_color == '#FFFFFF' or cover_color =='FC59D3':
+            font_color = '#000000'
+        else:
+            font_color = '#FFFFFF'
+        book = Book.objects.create(user = user, name = name, link_name = link_name, language = language, words_per_page = words_per_page, cover_color = cover_color, font_color = font_color)
         book.save()
+        page = Page.objects.create(book=book, number=1)
+        page.save()
         return HttpResponseRedirect(reverse('index'))
     else:
         return JsonResponse({"message":"You should send POST request to create book"})
 
-def book_content(request,username,book_id):
-    return
+def book_content(request,username,book_name):
+    user = request.user 
+    book = Book.objects.filter(user = user,link_name = book_name).first()
+    pages = Page.objects.filter(book = book)
+    return render(request, "book/book.html",{
+        "pages":pages,
+        "book":book,
+    })
+
+def page_view(request,username,book_name,page_number):
+
+    return render(request, "book/page.html")
 
 def login_view(request):
     if request.method == 'POST':
