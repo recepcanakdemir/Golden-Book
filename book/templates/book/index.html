@@ -2,6 +2,7 @@
 
 {% block body %}
     {% if user.is_authenticated %}
+        {{user.username|json_script:"username" }}
         <h4>You signed in as {{user.username}}</h4>
         <div id="container" class=" row d-flex justify-content-start h-100">
             <div id = "inner-container" class="h-25 position-relative">
@@ -37,6 +38,8 @@
                 <div class="d-flex row justify-content-center">
                     <div class="d-flex m-auto justify-content-center">
                         <button id = "nxt-btn" class="p-2 bg-warning rounded m-2 border border-none"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        <button id = "beg-btn" class="p-2 bg-danger rounded m-2 border border-none">First</button>
+                        <button id = "end-btn" class="p-2 bg-danger rounded m-2 border border-bone">Last</button>
                         <button id = "pre-btn" class="p-2 bg-warning rounded m-2 border border-bone"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                     </div>
 

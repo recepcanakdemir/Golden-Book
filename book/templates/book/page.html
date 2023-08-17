@@ -1,5 +1,37 @@
 {% extends "book/layout.html" %}
 
 {% block body %}
-<h1>This is PAGE content page</h1>
+{{user.username|json_script:"username" }}
+{{book.name|json_script:"book_name" }}
+<div id="page-container" class="rounded">
+    <div id="inner-container" class="w-50 h-100 m-auto border border-dark rounded mt-3">
+
+        <div id="title" class="" style="color:{{book.cover_color}}">
+            <div class="d-flex justify-content-between w-100 p-2">
+                <div class="ml-3">
+                    <h1 id ="page-title" class="text-center fs-2 fw-bold mt-3">{{page.number}}</h1>
+                </div>
+                <div class="m-1 d-flex row justify-content-center">
+                    <button class="btn rounded w-50" id="new-page"><i class="fa fa-plus fa-lg" ></i></button>
+                    <p class="text-dark text-center fs-6">New Word</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-bottom w-100 p-4">
+            {% for word in words %}
+            <div id="word-meaning" class="d-flex justify-content-between w-100 bg-secondary rounded">
+
+                <div class="border border-dark" >
+                    <p class="p-1">{{word.word}}</p>
+                </div>
+                <div class="border border-dark">
+                    <p class="p-1">{{word.meaning}}</p>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

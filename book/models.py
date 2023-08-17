@@ -37,6 +37,9 @@ class Page(models.Model):
     number = models.IntegerField(blank=True,null=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False, related_name="book")
 
+    def __str__(self):
+        return f"{self.book.name} , {self.number}"
+
 class Word(models.Model):
     word = models.CharField(max_length=200, null = True)
     meaning = models.CharField(max_length=200, null=True)

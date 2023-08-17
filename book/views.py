@@ -39,22 +39,37 @@ def create_book(request):
         book.save()
         page = Page.objects.create(book=book, number=1)
         page.save()
+        word = Word.objects.create(page=page,word = "example", meaning = "ornek")
+        word.save()
         return HttpResponseRedirect(reverse('index'))
     else:
         return JsonResponse({"message":"You should send POST request to create book"})
-
+        
+@login_required
 def book_content(request,username,book_name):
     user = request.user 
     book = Book.objects.filter(user = user,link_name = book_name).first()
     pages = Page.objects.filter(book = book)
+    if request.method == 'POST':
+        number = 1+len(Page.objects.filter(book = book))
+        new_page = Page.objects.create(book = book, number = number)
+        word = Word.objects.create(page=new_page,word = "example", meaning = "ornek")
+        word.save()
+        new_page.save()
     return render(request, "book/book.html",{
         "pages":pages,
         "book":book,
     })
 
 def page_view(request,username,book_name,page_number):
-
-    return render(request, "book/page.html")
+    book = Book.objects.filter(link_name = book_name).first()
+    page = Page.objects.filter(book = book, number = page_number).first()
+    words = Word.objects.filter(page = page)
+    return render(request, "book/page.html",{
+        "words": words,
+        "page":page,
+        "book":book,
+    })
 
 def login_view(request):
     if request.method == 'POST':
