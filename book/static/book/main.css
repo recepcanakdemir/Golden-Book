@@ -1,6 +1,6 @@
 body{
     font-family: sans-serif;
-    overflow: hidden;
+    overflow-x: hidden;
     height: 100vh;
     width: 100vw;
 }
@@ -129,3 +129,19 @@ body{
 #op-7{background:#A303A0;color: white;}
 #op-8{background:#FC59D3;color: white;}
 
+/* Page Detail */
+
+#word-checkbox{
+  width: 70%;
+}
+#remember-checkbox{
+  width: 1rem;
+}
+#checkbox-container{
+  width: 35%;
+}
+#all-words{
+  height: 85%;
+  overflow-y: auto;
+  overflow-x:hidden;
+}

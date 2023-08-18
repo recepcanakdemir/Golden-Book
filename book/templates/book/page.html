@@ -5,10 +5,9 @@
 {{book.name|json_script:"book_name" }}
 <div id="page-container" class="rounded">
     <div id="inner-container" class="w-50 h-100 m-auto border border-dark rounded mt-3">
-
         <div id="title" class="" style="color:{{book.cover_color}}">
             <div class="d-flex justify-content-between w-100 p-2">
-                <div class="ml-3">
+                <div class="w-25">
                     <h1 id ="page-title" class="text-center fs-2 fw-bold mt-3">{{page.number}}</h1>
                 </div>
                 <div class="m-1 d-flex row justify-content-center">
@@ -18,19 +17,32 @@
             </div>
         </div>
 
-        <div class="rounded-bottom w-100 p-4">
+        <div id="all-words">
+
+            <p id="remember-question" class="text-end m-2">Did you remember?</p>
             {% for word in words %}
-            <div id="word-meaning" class="d-flex justify-content-between w-100 bg-secondary rounded">
-
-                <div class="border border-dark" >
-                    <p class="p-1">{{word.word}}</p>
+                <div id="word-meaning" class="d-flex m-2 border-bottom justify-content-between rounded">
+                    <div class="w-50 border d-flex rounded" >
+                        <p class="p-2 fw-bold">1.</p>
+                        <p class="p-2">{{word.word}}</p>
+                    </div>
+                    <div id="word-checkbox" class="border d-flex justify-content-between rounded">
+                        <div class="d-flex w-50">
+                            <div class="m-2 d-none"><i class="fa fa-eye-slash" aria-hidden="true"></i></div>
+                            <div class="m-2"><i class="fa fa-eye" aria-hidden="true"></i></div>
+                            <div class="">
+                                <p class="p-2 text-right">{{word.meaning}}</p>
+                            </div>
+                        </div>
+                        <div id="checkbox-container" class="d-flex justify-content-center border rounded">
+                            <input id="remember-checkbox" class="text-center" type="checkbox">
+                        </div>
+                    </div>
                 </div>
-                <div class="border border-dark">
-                    <p class="p-1">{{word.meaning}}</p>
-                </div>
-
-            </div>
             {% endfor %}
+        </div>
+        <div class="w-100 d-flex justify-content-center">
+            <div class="btn btn-primary m-2">Save</div>
         </div>
     </div>
 </div>

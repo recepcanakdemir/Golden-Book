@@ -44,6 +44,7 @@ class Word(models.Model):
     word = models.CharField(max_length=200, null = True)
     meaning = models.CharField(max_length=200, null=True)
     page = models.ForeignKey(Page, on_delete=models.CASCADE, null = False,  related_name="page")
+    remembered = models.BooleanField(default=False)
 
     def __str__(self):
         return self.word
