@@ -1,6 +1,6 @@
 body{
     font-family: sans-serif;
-    overflow-x: hidden;
+    overflow: hidden;
     height: 100vh;
     width: 100vw;
 }
@@ -144,4 +144,20 @@ body{
   height: 85%;
   overflow-y: auto;
   overflow-x:hidden;
+}
+
+#edit-word-btn{
+  margin-top: .5rem;
+  height: 40px;
+}
+
+#save-word-btn{
+  margin-top: .5rem;
+  height: 40px;
+}
+
+
+
+#word-meaning-headline{
+  width: 56%;
 }

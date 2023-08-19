@@ -1,3 +1,4 @@
+import json
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
@@ -37,10 +38,12 @@ def create_book(request):
             font_color = '#FFFFFF'
         book = Book.objects.create(user = user, name = name, link_name = link_name, language = language, words_per_page = words_per_page, cover_color = cover_color, font_color = font_color)
         book.save()
-        page = Page.objects.create(book=book, number=1)
+        page = Page.objects.create(book=book, number=1, edit_mode = True, first_save_done = False)
         page.save()
-        word = Word.objects.create(page=page,word = "example", meaning = "ornek")
-        word.save()
+        words_per_page  = int(book.words_per_page)
+        for i in range (words_per_page): 
+            word = Word.objects.create(page=page, word = "example", meaning = "ornek",number = i+1)
+            word.save()
         return HttpResponseRedirect(reverse('index'))
     else:
         return JsonResponse({"message":"You should send POST request to create book"})
@@ -52,9 +55,11 @@ def book_content(request,username,book_name):
     pages = Page.objects.filter(book = book)
     if request.method == 'POST':
         number = 1+len(Page.objects.filter(book = book))
-        new_page = Page.objects.create(book = book, number = number)
-        word = Word.objects.create(page=new_page,word = "example", meaning = "ornek")
-        word.save()
+        new_page = Page.objects.create(book = book, number = number, edit_mode = True, first_save_done = False)
+        words_per_page  = int(book.words_per_page)
+        for i in range (words_per_page): 
+            word = Word.objects.create(page=new_page,word = "example", meaning = "ornek",number = i+1)
+            word.save()
         new_page.save()
     return render(request, "book/book.html",{
         "pages":pages,
@@ -63,8 +68,21 @@ def book_content(request,username,book_name):
 
 def page_view(request,username,book_name,page_number):
     book = Book.objects.filter(link_name = book_name).first()
+    pages = Page.objects.filter(book = book)
     page = Page.objects.filter(book = book, number = page_number).first()
     words = Word.objects.filter(page = page)
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        index = 0
+        for word in words:
+            word.word = data[index].get('word')
+            word.meaning = data[index].get('meaning')
+            index += 1
+            word.save()
+        page.first_save_done = True
+        page.edit_mode = False
+        page.save()
+        return JsonResponse({"message":"Words saved successfully"})
     return render(request, "book/page.html",{
         "words": words,
         "page":page,

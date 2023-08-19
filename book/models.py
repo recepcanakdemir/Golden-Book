@@ -36,6 +36,8 @@ class Book(models.Model):
 class Page(models.Model):
     number = models.IntegerField(blank=True,null=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False, related_name="book")
+    edit_mode = models.BooleanField(default=True)
+    first_save_done = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.book.name} , {self.number}"
@@ -45,6 +47,7 @@ class Word(models.Model):
     meaning = models.CharField(max_length=200, null=True)
     page = models.ForeignKey(Page, on_delete=models.CASCADE, null = False,  related_name="page")
     remembered = models.BooleanField(default=False)
+    number = models.IntegerField(blank=True,null=True)
 
     def __str__(self):
         return self.word
