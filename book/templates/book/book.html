@@ -3,6 +3,9 @@
 {% block body %}
 {{user.username|json_script:"username" }}
 {{book.name|json_script:"book_name" }}
+
+<h1> {{word_list}} </h1>
+<h1> {{meaning_list}} </h1>
 <div id="page-container" class="rounded">
     <div class="m-auto">
         <h5 class="text-center pt-3 mb-0 pb-0">Note: You can only add 50 pages for every book</h5>

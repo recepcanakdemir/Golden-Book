@@ -138,7 +138,6 @@ function resizeFontSize(books){
 }
 
 async function createNewPage(e){
-    
     const loggedUser = JSON.parse(document.getElementById('username').textContent); 
     const bookName = JSON.parse(document.querySelector('#book_name').textContent).split(' ').join('-');
     console.log("a",loggedUser)
@@ -153,7 +152,7 @@ async function createNewPage(e){
         page.classList.add('m-3')
         page.classList.add('text-decoration-none')
         page.setAttribute('id','page')
-        page.setAttribute('href',`${bookName}/${number-1}`)
+        page.setAttribute('href',`${bookName}/${number}`)
         page.innerHTML = `<h1 id ="page-number" class="text-center" style="color:${color}">${number}</h1>`
         console.log(allPages.childNodes)
         pageContainer.appendChild(page)
@@ -169,6 +168,88 @@ async function createNewPage(e){
     }
 }
 
+function displayEditWordView(e){
+        //This opens up word edit view
+        const wordArea = e.target.closest('#word-meaning').childNodes[1]
+        const currentWord = wordArea.childNodes[3].textContent
+        wordArea.childNodes[5].value = currentWord
+        wordArea.childNodes[3].classList.add('d-none')
+        wordArea.childNodes[5].classList.remove('d-none')
+
+        //This opens up meaning edit view
+        const meaningArea = e.target.closest('#word-checkbox').childNodes[1].childNodes[1]
+        const currentMeaning = meaningArea.childNodes[1].textContent
+        meaningArea.childNodes[3].value = currentMeaning
+        meaningArea.childNodes[1].classList.add('d-none')
+        meaningArea.childNodes[3].classList.remove('d-none')
+        console.log(currentMeaning)
+        console.log(meaningArea.childNodes[3])
+
+        //switch edit button to save button
+        e.target.closest('#checkbox-container').childNodes[1].classList.remove('d-none')
+        e.target.classList.add('d-none')
+}
+
+function saveTheWordsChanges(e){
+    console.log(e.target)
+    //This opens up word edit view
+    const wordArea = e.target.closest('#word-meaning').childNodes[1]
+    const currentWord = wordArea.childNodes[5].value
+    wordArea.childNodes[3].textContent= currentWord
+    wordArea.childNodes[3].classList.remove('d-none')
+    wordArea.childNodes[5].classList.add('d-none')
+
+    //This opens up meaning edit view
+    const meaningArea = e.target.closest('#word-checkbox').childNodes[1].childNodes[1]
+    const currentMeaning = meaningArea.childNodes[3].value
+    meaningArea.childNodes[1].textContent = currentMeaning
+    meaningArea.childNodes[1].classList.remove('d-none')
+    meaningArea.childNodes[3].classList.add('d-none')
+    console.log(currentMeaning)
+    console.log(meaningArea.childNodes[3])
+
+    //switch edit button to save button
+    e.target.closest('#checkbox-container').childNodes[3].classList.remove('d-none')
+    e.target.classList.add('d-none')
+}
+async function saveWords(){
+    console.log("save clicked")
+    const loggedUser = JSON.parse(document.getElementById('username').textContent); 
+    const bookName = JSON.parse(document.querySelector('#book_name').textContent).split(' ').join('-');
+    const pageNumber = JSON.parse(document.getElementById('page_number').textContent); 
+    console.log(loggedUser, bookName,pageNumber)
+    const allWordCards = document.querySelectorAll('#word-meaning')
+    let wordsContent = []
+    allWordCards.forEach(wordCard => {
+        const word = wordCard.childNodes[1].childNodes[3].textContent
+        const meaning = wordCard.childNodes[3].childNodes[1].childNodes[1].childNodes[1].textContent
+        const wordMeaningMatch = {
+            word:word,
+            meaning:meaning
+        }
+        wordsContent.push(wordMeaningMatch)
+    })
+    document.querySelector('#back-to-pages-btn').classList.remove('d-none')
+    await fetch(`/${loggedUser}/${bookName}/${pageNumber}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken') // You need to define the `getCookie` function
+        },
+        body: JSON.stringify(wordsContent)
+    }).then(res => res.json()).then(data => {
+        displaySuccess(data)
+    })
+
+}
+function displaySuccess(success){
+    const container = document.querySelector('#word-save-success');
+    container.classList.remove('d-none')
+    container.innerHTML = success.message
+    setTimeout(() => {
+        container.classList.add('d-none')
+    }, 2000);
+}
 function init(){
     const createBtn = document.querySelector('#create-btn');
     const body = document.querySelector('body'); 
@@ -186,7 +267,31 @@ function init(){
             document.querySelector('#new-page').disabled = true
         }
     }
+    
+    if(document.querySelector('#all-words')){
+        const allWords= document.querySelector('#all-words')
+            allWords.addEventListener('click',(e) => {
+                if(e.target.matches('#edit-word-btn')){
+                    displayEditWordView(e);
 
+                }else if(e.target.matches('#save-word-btn')){
+                    saveTheWordsChanges(e);
+                }
+            })
+    }
+
+    if(document.querySelector('#inner-container')){
+        const innerContainer = document.querySelector('#inner-container')
+        innerContainer.addEventListener('click',(e)=>{
+            if(e.target.matches('#save-all-btn')){
+                saveWords()
+            }
+        })
+    }
+    //if(document.querySelector('#edit-word-btn')){
+        //const editWordBtn = document.querySelector('#edit-word-btn')
+        //editWordBtn.addEventListener('click',displayEditWordView)
+    //}
     if(document.getElementById('username')){
         logged_user = JSON.parse(document.getElementById('username').textContent); 
     }

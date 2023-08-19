@@ -3,47 +3,94 @@
 {% block body %}
 {{user.username|json_script:"username" }}
 {{book.name|json_script:"book_name" }}
+{{page.number|json_script:"page_number"}}
 <div id="page-container" class="rounded">
     <div id="inner-container" class="w-50 h-100 m-auto border border-dark rounded mt-3">
         <div id="title" class="" style="color:{{book.cover_color}}">
-            <div class="d-flex justify-content-between w-100 p-2">
-                <div class="w-25">
-                    <h1 id ="page-title" class="text-center fs-2 fw-bold mt-3">{{page.number}}</h1>
-                </div>
-                <div class="m-1 d-flex row justify-content-center">
-                    <button class="btn rounded w-50" id="new-page"><i class="fa fa-plus fa-lg" ></i></button>
-                    <p class="text-dark text-center fs-6">New Word</p>
-                </div>
+            <div class="d-flex justify-content-center w-100 p-2">
+                <h1 id ="page-title" class="text-center fs-2 fw-bold mt-3">{{page.number}}</h1>
             </div>
         </div>
+        {% if page.edit_mode and page.first_save_done == False %}
 
         <div id="all-words">
 
-            <p id="remember-question" class="text-end m-2">Did you remember?</p>
+    <div id="word-save-success" class="alert alert-success d-none" role="alert">
+    </div>
+    <div class="d-flex justify-content-between">
+        <div id="word-meaning-headline" class="d-flex justify-content-between">
+            <p id="word-title" class="text-end m-2">WORD</p>
+            <p id="meaning-title" class="text-center m-2">MEANING</p>
+        </div>
+        <div>
+        </div>
+    </div>
             {% for word in words %}
-                <div id="word-meaning" class="d-flex m-2 border-bottom justify-content-between rounded">
+                <div id="word-meaning" class="d-flex m-2 justify-content-between rounded">
                     <div class="w-50 border d-flex rounded" >
-                        <p class="p-2 fw-bold">1.</p>
+                        <p id="word-number" class="p-2 fw-bold">{{word.number}}</p>
                         <p class="p-2">{{word.word}}</p>
+                        <input class="mt-3 h-50 p-2 d-none" type="text" name="word" placeholder="word:example">
                     </div>
                     <div id="word-checkbox" class="border d-flex justify-content-between rounded">
                         <div class="d-flex w-50">
-                            <div class="m-2 d-none"><i class="fa fa-eye-slash" aria-hidden="true"></i></div>
-                            <div class="m-2"><i class="fa fa-eye" aria-hidden="true"></i></div>
                             <div class="">
                                 <p class="p-2 text-right">{{word.meaning}}</p>
+                                <input class="m-3 h-50 p-2 d-none"type="text" name="meaning" placeholder="meaning">
                             </div>
                         </div>
-                        <div id="checkbox-container" class="d-flex justify-content-center border rounded">
-                            <input id="remember-checkbox" class="text-center" type="checkbox">
+                        <div id="checkbox-container" class="d-flex justify-content-center rounded">
+                            <div id="save-word-btn" class="btn btn-success d-none">Save</div>
+                            <div id="edit-word-btn" class="btn btn-warning">Edit</div>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+        </div> 
+
+        <div class="d-flex">
+            <div class="w-100 d-flex justify-content-center">
+                <div id="save-all-btn" class="btn btn-primary m-2">Save</div>
+            </div>
+            <a href="{% url 'book_content' username=user.username book_name=book.link_name %}" class=" text-decoration-none w-100 d-flex justify-content-center d-none" id="back-to-pages-btn" >
+                <div class="btn btn-secondary m-2">Back to pages</div>
+            </a>
         </div>
+
+        {% elif page.edit_mode == False and page.first_save_done == True%}
+            <div id="all-words">
+                <p id="remember-question" class="text-end m-2">Did you remember?</p>
+                {% for word in words %}
+                    <div id="word-meaning" class="d-flex m-2 justify-content-between rounded">
+                        <div class="w-50 border d-flex rounded" >
+                            <p class="p-2 fw-bold">{{word.number}}</p>
+                            <div class="m-2 d-none"><i class="fa fa-eye-slash" aria-hidden="true"></i></div>
+                            <div class="m-2"><i class="fa fa-eye" aria-hidden="true"></i></div>
+                            <p class="p-2">{{word.word}}</p>
+                        </div>
+                        <div id="word-checkbox" class="border d-flex justify-content-between rounded">
+                            <div class="d-flex w-50">
+                                <div class="m-2 d-none"><i class="fa fa-eye-slash" aria-hidden="true"></i></div>
+                                <div class="m-2"><i class="fa fa-eye" aria-hidden="true"></i></div>
+                                <div class="">
+                                    <p class="p-2 text-right">{{word.meaning}}</p>
+                                </div>
+                            </div>
+                            <div id="checkbox-container" class="d-flex justify-content-center border rounded">
+                                <input id="remember-checkbox" class="text-center" type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div> 
         <div class="w-100 d-flex justify-content-center">
-            <div class="btn btn-primary m-2">Save</div>
+            <div class="btn btn-primary m-2">Save and Rewrite The Words</div>
         </div>
+        {% elif page.edit_mode == True and page.first_save_done == True%}
+
+        {% else %}
+
+        {% endif %}
     </div>
 </div>
 {% endblock %}
