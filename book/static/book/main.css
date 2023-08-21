@@ -161,3 +161,13 @@ body{
 #word-meaning-headline{
   width: 56%;
 }
+
+#sl-eye-meaning:hover,
+#sl-eye-word:hover,
+#opn-eye-meaning:hover,
+#opn-eye-word:hover{
+  cursor: pointer;
+}
+
+#sm-word{
+}

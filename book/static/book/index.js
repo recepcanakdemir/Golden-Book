@@ -172,9 +172,11 @@ function displayEditWordView(e){
         //This opens up word edit view
         const wordArea = e.target.closest('#word-meaning').childNodes[1]
         const currentWord = wordArea.childNodes[3].textContent
-        wordArea.childNodes[5].value = currentWord
-        wordArea.childNodes[3].classList.add('d-none')
-        wordArea.childNodes[5].classList.remove('d-none')
+        const wordEdit = wordArea.childNodes[3].childNodes[3]
+        const wordDiv = wordArea.childNodes[3].childNodes[1]
+        wordEdit.value = currentWord.trim()
+        wordDiv.classList.add('d-none')
+        wordEdit.classList.remove('d-none')
 
         //This opens up meaning edit view
         const meaningArea = e.target.closest('#word-checkbox').childNodes[1].childNodes[1]
@@ -194,10 +196,12 @@ function saveTheWordsChanges(e){
     console.log(e.target)
     //This opens up word edit view
     const wordArea = e.target.closest('#word-meaning').childNodes[1]
-    const currentWord = wordArea.childNodes[5].value
-    wordArea.childNodes[3].textContent= currentWord
-    wordArea.childNodes[3].classList.remove('d-none')
-    wordArea.childNodes[5].classList.add('d-none')
+    const currentWord = wordArea.childNodes[3].childNodes[3].value
+    const wordEdit = wordArea.childNodes[3].childNodes[3]
+    const wordDiv = wordArea.childNodes[3].childNodes[1]
+    wordDiv.textContent= currentWord
+    wordDiv.classList.remove('d-none')
+    wordEdit.classList.add('d-none')
 
     //This opens up meaning edit view
     const meaningArea = e.target.closest('#word-checkbox').childNodes[1].childNodes[1]
@@ -242,6 +246,38 @@ async function saveWords(){
     })
 
 }
+
+async function saveAndRewriteButton(){
+    const loggedUser = JSON.parse(document.getElementById('username').textContent); 
+    const bookName = JSON.parse(document.querySelector('#book_name').textContent).split(' ').join('-');
+    const pageNumber = JSON.parse(document.getElementById('page_number').textContent); 
+    const allWordCards = document.querySelectorAll('#word-meaning');
+    let forgottenWords = []
+    allWordCards.forEach( wordCard=> {
+        const remembered = wordCard.childNodes[3].childNodes[3].childNodes[1].checked
+        if(remembered){
+            const word = wordCard.childNodes[1].childNodes[7].textContent
+            const meaning = wordCard.childNodes[3].childNodes[1].childNodes[5].childNodes[1].textContent
+            const forgottenWordMeaningMatches = {
+                word:word,
+                meaning:meaning
+            }
+            forgottenWords.push(forgottenWordMeaningMatches)
+        }
+    })
+    await fetch(`/${loggedUser}/${bookName}/${pageNumber}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken') // You need to define the `getCookie` function
+        },
+        body: JSON.stringify(forgottenWords)
+    }).then(res => res.json()).then(data => {
+        displaySuccess(data)
+    })
+    document.querySelector('#rewrite-words').classList.remove('d-none')
+
+}
 function displaySuccess(success){
     const container = document.querySelector('#word-save-success');
     container.classList.remove('d-none')
@@ -250,6 +286,48 @@ function displaySuccess(success){
         container.classList.add('d-none')
     }, 2000);
 }
+
+function hideAndDisplayWord(e){
+    console.log("hid")
+    const id = e.target.parentElement.getAttribute('id');
+    if(id === 'sl-eye-word' || id === 'opn-eye-word'){
+        const parent = e.target.closest('#w-container')
+        const word = parent.childNodes[7]
+        const wordStar = parent.childNodes[9]
+        const openEyeWord = parent.childNodes[5]
+        const slashEyeWord = parent.childNodes[3]
+        if(id === 'sl-eye-word' ){
+            word.classList.remove('d-none')
+            wordStar.classList.add('d-none')
+            openEyeWord.classList.remove('d-none')
+            slashEyeWord.classList.add('d-none')
+        }else{
+            word.classList.add('d-none')
+            wordStar.classList.remove('d-none')
+            openEyeWord.classList.add('d-none')
+            slashEyeWord.classList.remove('d-none')
+        }       
+    }else{
+        const parent = e.target.closest('#m-container')
+        console.log(parent.childNodes[5].childNodes)
+        const meaning = parent.childNodes[5].childNodes[1]
+        const meaningStar = parent.childNodes[5].childNodes[3]
+        const openEyeMeaning = parent.childNodes[3]
+        const slashEyeMeaning= parent.childNodes[1]
+        if(id === 'sl-eye-meaning' ){
+            meaning.classList.remove('d-none')
+            meaningStar.classList.add('d-none')
+            openEyeMeaning.classList.remove('d-none')
+            slashEyeMeaning.classList.add('d-none')
+        }else{
+            meaning.classList.add('d-none')
+            meaningStar.classList.remove('d-none')
+            openEyeMeaning.classList.add('d-none')
+            slashEyeMeaning.classList.remove('d-none')
+        }       
+    }
+}
+
 function init(){
     const createBtn = document.querySelector('#create-btn');
     const body = document.querySelector('body'); 
@@ -285,6 +363,12 @@ function init(){
         innerContainer.addEventListener('click',(e)=>{
             if(e.target.matches('#save-all-btn')){
                 saveWords()
+            }
+            if(e.target.matches('.fa-eye') || e.target.matches('.fa-eye-slash')){
+                console.log("hi")
+                hideAndDisplayWord(e)
+            }else if(e.target.matches('#save-words-btn')){
+                saveAndRewriteButton()
             }
         })
     }

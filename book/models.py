@@ -48,6 +48,7 @@ class Word(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE, null = False,  related_name="page")
     remembered = models.BooleanField(default=False)
     number = models.IntegerField(blank=True,null=True)
+    repeated = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.word
