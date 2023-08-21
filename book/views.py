@@ -42,7 +42,7 @@ def create_book(request):
         page.save()
         words_per_page  = int(book.words_per_page)
         for i in range (words_per_page): 
-            word = Word.objects.create(page=page, word = "example", meaning = "ornek",number = i+1)
+            word = Word.objects.create(page=page, word = "example", meaning = "ornek",number = i+1,repeated=1)
             word.save()
         return HttpResponseRedirect(reverse('index'))
     else:
@@ -58,7 +58,7 @@ def book_content(request,username,book_name):
         new_page = Page.objects.create(book = book, number = number, edit_mode = True, first_save_done = False)
         words_per_page  = int(book.words_per_page)
         for i in range (words_per_page): 
-            word = Word.objects.create(page=new_page,word = "example", meaning = "ornek",number = i+1)
+            word = Word.objects.create(page=new_page,word = "example", meaning = "ornek",number = i+1, repeated=1)
             word.save()
         new_page.save()
     return render(request, "book/book.html",{
@@ -71,22 +71,52 @@ def page_view(request,username,book_name,page_number):
     pages = Page.objects.filter(book = book)
     page = Page.objects.filter(book = book, number = page_number).first()
     words = Word.objects.filter(page = page)
+    memorized_words = []
     if request.method == 'PUT':
-        data = json.loads(request.body)
-        index = 0
-        for word in words:
-            word.word = data[index].get('word')
-            word.meaning = data[index].get('meaning')
-            index += 1
-            word.save()
-        page.first_save_done = True
-        page.edit_mode = False
-        page.save()
-        return JsonResponse({"message":"Words saved successfully"})
+        if page.first_save_done == False and page.edit_mode == True:
+            data = json.loads(request.body)
+            index = 0
+            for word in words:
+                word.word = data[index].get('word')
+                word.meaning = data[index].get('meaning')
+                index += 1
+                word.save()
+            page.first_save_done = True
+            page.save()
+            page.edit_mode = False
+            page.save()
+            return JsonResponse({"message":"Words saved successfully"})
+        elif page.first_save_done == True and page.edit_mode == True:
+            data = json.loads(request.body)
+            index = 0
+            for word in words:
+                word.word = data[index].get('word')
+                word.meaning = data[index].get('meaning')
+                index += 1
+                word.save()
+            page.first_save_done = True
+            page.save()
+            page.edit_mode = False
+            page.save()
+            return JsonResponse({"message":"Words saved successfully"})
+        else:
+            data = json.loads(request.body)
+            for index in range (0,len(data)):
+                checked_word = Word.objects.filter(page=page, word = data[index].get('word'), meaning = data[index].get('meaning'))
+                memorized_words.append(checked_word)
+                Word.objects.filter(page=page,word = data[index].get('word'), meaning = data[index].get('meaning')).delete()
+            for word in words:
+                word.repeated+=1
+                word.save()
+            page.edit_mode = True 
+            page.save()
+            return JsonResponse({"message":"Unforgotten words has been deleted"})
     return render(request, "book/page.html",{
         "words": words,
         "page":page,
         "book":book,
+        "word_amount":len(words),
+        "memorized_words":memorized_words
     })
 
 def login_view(request):
