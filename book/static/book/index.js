@@ -66,29 +66,6 @@ function getCookie(name) {
   }
   return cookieValue;
 }
-
-function createNewBook(){
-    //const bookName = document.querySelector('#book-name').value;
-    //console.log(bookName)
-    //const targetLanguage = document.querySelector('#target-language').value
-    //const wordForPage = document.querySelector('#words-per-page').value
-    //const e = document.querySelector('#color-cover');
-    //const color = e.options[e.selectedIndex].value;
-    //const colorSelect = document.querySelector('#color-cover').innerHTML;
-    //let textColor = '#FFFFFF';
-    //if( colorSelect === 'White' || colorSelect === 'Yellow' || colorSelect === 'Pink' ){
-        //textColor = '#000000';
-    //}
-    //const bookLine = document.querySelector('#books-line')
-    //const div = document.createElement('div');
-    //div.innerHTML = `
-    //<div id="book" class="m-1 rounded text-light" style="background-color:${color};">
-        //<h1 class="p-4">${bookName}</h1>
-    //</div>`
-    //bookLine.appendChild(div)
-    //closeNewBookView2()
-}
-
 function filterBooks(e){
     const text = e.target.value.toLowerCase();
     document.querySelectorAll(`.book`).forEach((item) => {
@@ -143,15 +120,16 @@ async function createNewPage(e){
     console.log("a",loggedUser)
     console.log("pagetitle",bookName)
     const pageContainer = document.querySelector('#all-pages')
-    const allPages = document.querySelectorAll('#page');
+    const allPages = document.querySelectorAll('.page');
     if(allPages.length !== 50){
         const color = allPages[0].childNodes[1].getAttribute('style').split(':')[1]
         const number = 1 + parseInt(allPages[allPages.length-1].textContent)
         const page = document.createElement('a');
         page.classList.add('p-3')
+        page.classList.add('page')
         page.classList.add('m-3')
         page.classList.add('text-decoration-none')
-        page.setAttribute('id','page')
+        page.setAttribute('id','page-False')
         page.setAttribute('href',`${bookName}/${number}`)
         page.innerHTML = `<h1 id ="page-number" class="text-center" style="color:${color}">${number}</h1>`
         console.log(allPages.childNodes)
@@ -228,8 +206,8 @@ async function saveWords(){
         const word = wordCard.childNodes[1].childNodes[3].textContent
         const meaning = wordCard.childNodes[3].childNodes[1].childNodes[1].childNodes[1].textContent
         const wordMeaningMatch = {
-            word:word,
-            meaning:meaning
+            word:word.trim(),
+            meaning:meaning.trim()
         }
         wordsContent.push(wordMeaningMatch)
     })
@@ -252,26 +230,29 @@ async function saveAndRewriteButton(){
     const bookName = JSON.parse(document.querySelector('#book_name').textContent).split(' ').join('-');
     const pageNumber = JSON.parse(document.getElementById('page_number').textContent); 
     const allWordCards = document.querySelectorAll('#word-meaning');
-    let forgottenWords = []
+    let unForgottenWords = []
     allWordCards.forEach( wordCard=> {
         const remembered = wordCard.childNodes[3].childNodes[3].childNodes[1].checked
         if(remembered){
             const word = wordCard.childNodes[1].childNodes[7].textContent
             const meaning = wordCard.childNodes[3].childNodes[1].childNodes[5].childNodes[1].textContent
-            const forgottenWordMeaningMatches = {
-                word:word,
-                meaning:meaning
+            const unForgottenWordMeaningMatches = {
+                word:word.trim(),
+                meaning:meaning.trim()
             }
-            forgottenWords.push(forgottenWordMeaningMatches)
+            console.log(unForgottenWordMeaningMatches)
+            unForgottenWords.push(unForgottenWordMeaningMatches)
         }
     })
+    console.log(unForgottenWords)
+
     await fetch(`/${loggedUser}/${bookName}/${pageNumber}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": getCookie('csrftoken') // You need to define the `getCookie` function
         },
-        body: JSON.stringify(forgottenWords)
+        body: JSON.stringify(unForgottenWords)
     }).then(res => res.json()).then(data => {
         displaySuccess(data)
     })
@@ -372,10 +353,6 @@ function init(){
             }
         })
     }
-    //if(document.querySelector('#edit-word-btn')){
-        //const editWordBtn = document.querySelector('#edit-word-btn')
-        //editWordBtn.addEventListener('click',displayEditWordView)
-    //}
     if(document.getElementById('username')){
         logged_user = JSON.parse(document.getElementById('username').textContent); 
     }
@@ -395,12 +372,16 @@ function init(){
     else{
         return
     }
+    if(document.querySelector('#book-with-same-name')){
+        setTimeout(() => {
+            document.querySelector('#book-with-same-name').className = 'd-none'
+        }, 2000);
+    }
     
 
     resizeFontSize(books)
     // Call the function initially and whenever the window is resized
     body.addEventListener('click',closeNewBookView)
-    saveCreateBtn.addEventListener('click',createNewBook)
     if(document.querySelectorAll('.book')){
         bookSlider();
     }
