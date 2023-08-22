@@ -28,6 +28,12 @@ def create_book(request):
     if request.method == 'POST':
         user = request.user
         name = request.POST["name"]
+        books = Book.objects.filter(user = user)
+        if len(Book.objects.filter(user = user, name = name))>0:
+            return render(request, "book/index.html", {
+                "message":"There is a book with this name",
+                "books":books
+            })
         link_name = '-'.join(str(name).split(' '))
         language = request.POST["language"]
         words_per_page = request.POST["words"]
@@ -110,7 +116,10 @@ def page_view(request,username,book_name,page_number):
             page.save()
             return JsonResponse({"message":"Unforgotten words has been deleted"})
     words = Word.objects.filter(page = page,remembered = False)
-    remembered_words = Word.objects.filter(page=page, remembered = True)
+    remembered_words = Word.objects.filter(page=page, remembered = True).order_by('-repeated')
+    if len(remembered_words) == book.words_per_page:
+        page.finished = True
+        page.save()
     return render(request, "book/page.html",{
         "words": words,
         "page":page,

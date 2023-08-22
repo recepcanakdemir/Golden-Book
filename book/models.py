@@ -38,8 +38,7 @@ class Page(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False, related_name="book")
     edit_mode = models.BooleanField(default=True)
     first_save_done = models.BooleanField(default=False)
-    start_number = models.IntegerField(blank=True,null=True)
-
+    finished = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.book.name} , {self.number}"
 
