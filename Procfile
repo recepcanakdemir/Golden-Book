@@ -1,1 +1,1 @@
-web: gunicorn golden_book.wsgi --log-file-
+web: gunicorn golden_book.wsgi --log-file - 
