@@ -228,8 +228,8 @@ async function saveWords(){
         const word = wordCard.childNodes[1].childNodes[3].textContent
         const meaning = wordCard.childNodes[3].childNodes[1].childNodes[1].childNodes[1].textContent
         const wordMeaningMatch = {
-            word:word,
-            meaning:meaning
+            word:word.trim(),
+            meaning:meaning.trim()
         }
         wordsContent.push(wordMeaningMatch)
     })
@@ -252,26 +252,29 @@ async function saveAndRewriteButton(){
     const bookName = JSON.parse(document.querySelector('#book_name').textContent).split(' ').join('-');
     const pageNumber = JSON.parse(document.getElementById('page_number').textContent); 
     const allWordCards = document.querySelectorAll('#word-meaning');
-    let forgottenWords = []
+    let unForgottenWords = []
     allWordCards.forEach( wordCard=> {
         const remembered = wordCard.childNodes[3].childNodes[3].childNodes[1].checked
         if(remembered){
             const word = wordCard.childNodes[1].childNodes[7].textContent
             const meaning = wordCard.childNodes[3].childNodes[1].childNodes[5].childNodes[1].textContent
-            const forgottenWordMeaningMatches = {
-                word:word,
-                meaning:meaning
+            const unForgottenWordMeaningMatches = {
+                word:word.trim(),
+                meaning:meaning.trim()
             }
-            forgottenWords.push(forgottenWordMeaningMatches)
+            console.log(unForgottenWordMeaningMatches)
+            unForgottenWords.push(unForgottenWordMeaningMatches)
         }
     })
+    console.log(unForgottenWords)
+
     await fetch(`/${loggedUser}/${bookName}/${pageNumber}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": getCookie('csrftoken') // You need to define the `getCookie` function
         },
-        body: JSON.stringify(forgottenWords)
+        body: JSON.stringify(unForgottenWords)
     }).then(res => res.json()).then(data => {
         displaySuccess(data)
     })
