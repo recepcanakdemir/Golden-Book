@@ -1,0 +1,116 @@
+{% extends "book/layout.html" %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        {{user.username|json_script:"username" }}
+
+        {% if message %}
+            <div id="book-with-same-name"class="alert alert-warning w-100" role="alert">
+                    {{message}}
+            </div>
+        {% endif %}
+        <div id="container" class=" row d-flex justify-content-start h-100 mt-5">
+            <div id = "inner-container" class="h-25 position-relative">
+                <div id="your-books-container" class="w-100">
+                    <div id="your-books-title" class="w-50 m-auto bg-warning rounded p-1 border border-dark">
+                        <h1 class="text-center p-1">Your Books</h1>
+                    </div>
+                </div>
+
+                <div id="search-box-container" class="">
+                    <div class="w-100  mt-2 mb-2 p-1 d-flex justify-content-center">
+                        <input id="filter-books" type="text" class="m-auto w-50 border rounded border-2 p-2" placeholder="Search in books">
+                    </div>
+                </div>
+
+            <div id = "book-view-container" class="border border-2 rounded w-50  m-auto text-center d-flex row align-items-center">
+                <div class="d-none">
+                    <h1>There is no book yet</h1>
+                </div>
+                <div id="books-view" class="h-100 w-100">
+                    <div id="books-line" class="h-100 w-100">
+                            {% for book in books %}
+                            <a href="{% url 'book_content' username=user.username book_name=book.link_name%}" id="{{ book.id }}" class="m-1 rounded book text-decoration-none border border-dark" style="background-color: {{ book.cover_color }}; color:{{book.font_color}}">
+                                <p class="book-title p-3" style="color:{{book.font_color}}">{{ book.name |truncatechars:30 }}</p>
+                            </a>
+                            {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+                <div class="d-flex row justify-content-center">
+                    <div id="first-last-buttons" class="d-flex m-auto justify-content-center">
+                        <button id = "nxt-btn" class="p-2 bg-warning rounded m-2 border border-none"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        <button id = "beg-btn" class="p-2 bg-danger rounded m-2 border border-none">First</button>
+                        <button id = "end-btn" class="p-2 bg-danger rounded m-2 border border-bone">Last</button>
+                        <button id = "pre-btn" class="p-2 bg-warning rounded m-2 border border-bone"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                    </div>
+
+                    <div id="create-book-view" class="d-flex row text-center">
+                        <div class="h-50">
+                            <div class="m-2">
+                                <div id="create-btn" class="btn btn-secondary"><i class="fa fa-plus p-2 fa-2x" aria-hidden="true"></i></div>
+                            </div>
+                            <div class="m-2">
+                                <h5>Create New Book</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    <div id="create-book-overlay" class="w-100 d-flex justify-content-center z-2 position-absolute top-0 d-none">
+                        <div id="form-background" class="h-100 rounded">
+                            <h2 class="p-3 text-center">Create New Notebook</h2>
+                            <form action="{% url 'create_book' %}" method="post" class="p-4">
+                                {% csrf_token %}
+                                <div class="d-flex row m-2">
+                                    <label>Book Name:</label>
+                                    <input type="text" name="name" id="book-name" placeholder="Book Name" class="p-2 border border-2 rounded m-2">
+                                </div>
+
+                                <div class="d-flex row m-2">
+                                    <label>Target Language:</label>
+                                    <input type="text" name="language" id="target-language" placeholder="Target Language" class="p-2 border border-2 rounded m-2">
+                                </div>
+                                <div class="d-flex row m-2">
+                                    <label>Words per page:</label>
+                                    <select name="words" id="words-per-page" class="p-2 border border-2 rounded m-2">
+                                        <option value="20">20</option>
+                                        <option value="25">25</option>
+                                        <option value="30">30</option>
+                                        <option value="35">35</option>
+                                    </select>
+                                </div>
+
+                                <div class="d-flex row m-2">
+                                    <label>Cover Color:</label>
+                                    <select name="color" id="color-cover" class="p-2 border border-2 rounded m-2">
+                                        <option id="op-1" value="#1D149E">Blue</option>
+                                        <option id="op-2" value="#FFEF00">Yellow</option>
+                                        <option id="op-3" value="#EB3324">Red</option>
+                                        <option id="op-4" value="#0C9E1C">Green</option>
+                                        <option id="op-5" value="#FFFFFF">White</option>
+                                        <option id="op-6" value="#000000">Black</option>
+                                        <option id="op-7" value="#A303A0">Purple</option>
+                                        <option id="op-8" value="#FC59D3">Pink</option>
+                                    </select>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" id="save-create" class="btn btn-warning" value="Create">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+            </div>
+
+            <div id="overlay" class="position-absolute z-1 top-0 start-0 bg-dark w-100 h-100 opacity-25 d-none border border-dark">
+            </div>
+        <div id="notebook-page-view">
+
+        </div>
+
+    </div>
+    {% endif %}
+
+{% endblock %}

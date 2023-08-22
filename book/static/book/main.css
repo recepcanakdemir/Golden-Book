@@ -1,0 +1,185 @@
+body{
+    font-family: sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    background-color: #ffffff;
+}
+#container{
+    height: 80vh;
+}
+#body-container{
+  height: 100%;
+  width: 100%;
+}
+
+/* BOOKS */
+
+.book{
+  position: relative;
+  padding: 20px;
+  flex: 0 0 auto;
+  width: 200px;
+  height: 270px;
+  margin-right: 40px;
+  overflow: hidden;
+}
+.book:hover{
+    cursor: pointer;
+    background-color: #f4f4f4;
+}
+
+#books-line{
+  display: flex;
+  /* add horizontal scrolling and make it smooth */
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* d-none the scroll bar*/
+#books-line::-webkit-scrollbar {
+  display: none;
+}
+
+#line-container{
+    height: 60%;
+}
+
+#form-background{
+    background-color:#f4f4f4;
+}
+
+#book-view-container{
+  height: 160%;
+}
+
+/*Not logged in*/
+#image-container{
+  overflow: hidden;
+  background-image:url("./images/1260521.jpg");
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.4;
+} 
+#login-form{
+  background-color:#ffffff;
+  padding: 20px;
+}
+
+
+/* Book Pages */
+
+#page-container{
+  width: 100vw;
+  height: 80vh;
+}
+
+
+#title{
+  height: 15%;
+  border-bottom: 1px dotted #333;
+  color: white;
+}
+
+#page-title{
+  -webkit-text-stroke: #333;
+  -webkit-text-stroke-width: 1px;
+}
+#all-pages{
+  height: 85%;
+  display: grid;
+  grid-template-columns:repeat(5,20%);
+  overflow: auto;
+}
+#page-False{
+  height: 150px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  border: 3px solid #333;
+}
+#page-True{
+  height: 150px;
+  background-color: #727272;
+  border-radius: 15px;
+  border: 3px solid #333;
+}
+
+#page:hover{
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+#page-number{
+  font-weight: bold;
+  -webkit-text-stroke: #333;
+  -webkit-text-stroke-width: 1px;
+}
+
+#new-page{
+  color:black;
+}
+#new-page:hover{
+  color:#575656;
+  background-color: #f4f4f4;
+}
+#op-1{background:#1D149E;color:white;}
+#op-2{background:#FFEF00;color:black;}
+#op-3{background: #EB3324;color: white;}
+#op-4{background:#0C9E1C;color: black;}
+#op-5{background:white;color: black;}
+#op-6{background:black;color: white;}
+#op-7{background:#A303A0;color: white;}
+#op-8{background:#FC59D3;color: white;}
+
+/* Page Detail */
+
+#word-checkbox{
+  width: 70%;
+}
+#remember-checkbox{
+  width: 1rem;
+}
+#checkbox-container{
+  width: 35%;
+}
+#all-words{
+  height: 85%;
+  overflow-y: auto;
+  overflow-x:hidden;
+}
+
+#edit-word-btn{
+  margin-top: .5rem;
+  height: 40px;
+}
+
+#save-word-btn{
+  margin-top: .5rem;
+  height: 40px;
+}
+
+
+
+#word-meaning-headline{
+  width: 56%;
+}
+
+#sl-eye-meaning:hover,
+#sl-eye-word:hover,
+#opn-eye-meaning:hover,
+#opn-eye-word:hover{
+  cursor: pointer;
+}
+
+.finished{
+  background-color:#D1E7DD;
+}
+
+
+.nav-color:hover{
+  border-bottom: 5px solid #827d2e;
+}
