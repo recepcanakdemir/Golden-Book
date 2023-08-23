@@ -116,19 +116,6 @@ After remembering all the words the page view will look like this:
 
 ![Alt Text](https://i.hizliresim.com/ks2hbp8.png)
 
-### Distinctiveness and Complexity
-
-- For every user main page is different. They have their own environment and can not see others' books or words. The models connected to each other more than two times. For example. Word -> Page -> Book -> User. In the edit word section, I used multiple input fields on the same page. These input fields are not in the form element of HTML. In other apps that I made in this course I did not use this method. Also In this app when a new book is created the first page of the book is being created and 20 - 35 example words are being created for this
-page. In other apps, I did not use these auto-created new objects. 
-- Users also can search books using the search box on the main page. This search box works simultaneously. So when the user types a letter or word, only the books that contain this letter or word in its title will be displayed in the books section. In the **wiki** project I used a search box but to make that search work users should have refreshed the page to see search results. 
-
-- On the main page I used the slider to see books. This slider works vertically for mobile device screens. In other apps, I did not use a slider like this.
-
-- In the pages section, new pages can be created without refreshing the page and the user can go to the details page of that new page without refreshing the page.
-
-- I guess most of the complexity is in the front-end side. I assume that these new features will satisfy the **Distinctiveness and Complexity**.
-
-
 ## Requirements
 - Git clone this app.
 - To be able to run this app, open your command line terminal and navigate to the directory where the **requirements.txt** file is located.
