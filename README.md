@@ -112,10 +112,6 @@ After remembering all the words the page view will look like this:
 
 - On the right side of every word you will see how many times you have repeated that word.
 
-- This web app is fully responsive for mobile devices.
-
-![Alt Text](https://i.hizliresim.com/ks2hbp8.png)
-
 ## Requirements
 - Git clone this app.
 - To be able to run this app, open your command line terminal and navigate to the directory where the **requirements.txt** file is located.
